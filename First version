@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Akshay Kumar — Open Source Evangelist & GrowIn Community Founder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #070710;
+      --surface: #0f0f1c;
+      --surface2: #171728;
+      --border: #252538;
+      --accent: #6ee7b7;
+      --accent2: #38bdf8;
+      --accent3: #f472b6;
+      --text: #ddddf0;
+      --muted: #6868a0;
+      --heading: #ffffff;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: .6;
+    }
+
+    /* CURSOR */
+    .cursor { width: 9px; height: 9px; background: var(--accent); border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000; transform: translate(-50%,-50%); transition: transform .15s ease; }
+    .cursor-ring { width: 34px; height: 34px; border: 1.5px solid var(--accent); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); opacity: .4; transition: transform .35s cubic-bezier(.23,1,.32,1), opacity .3s; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(7,7,16,.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--heading); text-decoration: none; letter-spacing: -.02em; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: .73rem; letter-spacing: .14em; text-transform: uppercase; transition: color .2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-badge { background: var(--accent); color: #070710; font-size: .65rem; padding: .3rem .75rem; border-radius: 100px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 8rem 3rem 5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(110,231,183,.035) 1px,transparent 1px), linear-gradient(90deg,rgba(110,231,183,.035) 1px,transparent 1px);
+      background-size: 52px 52px;
+      mask-image: radial-gradient(ellipse 85% 65% at 55% 40%, black 25%, transparent 75%);
+    }
+    .orb { position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none; }
+    .orb1 { width: 550px; height: 550px; background: rgba(110,231,183,.1); top: -150px; right: -50px; }
+    .orb2 { width: 320px; height: 320px; background: rgba(56,189,248,.08); bottom: 0; left: 80px; }
+    .orb3 { width: 220px; height: 220px; background: rgba(244,114,182,.06); top: 220px; left: 250px; }
+
+    .hero-chip {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(110,231,183,.08);
+      border: 1px solid rgba(110,231,183,.2);
+      border-radius: 100px; padding: .4rem 1rem;
+      font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 2rem;
+      width: fit-content;
+    }
+    .hero-chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:.3; } }
+
+    h1 {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(3.2rem, 8.5vw, 7.5rem);
+      line-height: .93; letter-spacing: -.04em;
+      color: var(--heading); margin-bottom: 1.75rem;
+    }
+    h1 .line2 {
+      background: linear-gradient(130deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .hero-sub {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.15rem; color: var(--muted);
+      margin-bottom: .6rem; font-style: italic;
+    }
+    .hero-desc { font-size: .88rem; color: var(--muted); max-width: 500px; line-height: 1.85; margin-bottom: 2.5rem; }
+
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 3.5rem; }
+    .btn {
+      display: inline-flex; align-items: center; gap: .6rem;
+      padding: .8rem 1.7rem; border-radius: 5px;
+      font-family: 'DM Mono', monospace; font-size: .78rem;
+      letter-spacing: .07em; text-transform: uppercase;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: all .25s ease;
+    }
+    .btn-primary { background: var(--accent); color: #070710; font-weight: 500; }
+    .btn-primary:hover { background: #a7f3d0; transform: translateY(-2px); box-shadow: 0 10px 35px rgba(110,231,183,.22); }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    .hero-numbers {
+      display: flex; flex-wrap: wrap; gap: 2.5rem;
+    }
+    .hero-num { }
+    .hero-num .n {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-num .l { font-size: .72rem; color: var(--muted); letter-spacing: .1em; display: block; margin-top: .15rem; }
+
+    /* SECTION SHARED */
+    section { padding: 6rem 3rem; }
+    .section-tag {
+      font-size: .7rem; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: .85rem;
+      display: flex; align-items: center; gap: .7rem;
+    }
+    .section-tag::before { content: '//'; opacity: .5; }
+    h2 {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(1.9rem, 4.5vw, 3.2rem);
+      letter-spacing: -.03em; color: var(--heading); margin-bottom: 1rem;
+    }
+    .divider { border: none; border-top: 1px solid var(--border); }
+
+    /* ABOUT */
+    #about { display: grid; grid-template-columns: 1.1fr 1fr; gap: 5rem; align-items: center; }
+    .about-text p { color: var(--muted); line-height: 1.95; margin-bottom: 1.1rem; font-size: .87rem; }
+    .about-text p strong { color: var(--text); font-weight: 500; }
+    .about-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.5rem; }
+    .tag {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 4px; padding: .3rem .75rem;
+      font-size: .73rem; color: var(--muted); letter-spacing: .05em;
+    }
+
+    .about-right { display: flex; flex-direction: column; gap: 1.25rem; }
+    .info-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.5rem 1.75rem;
+      display: flex; align-items: center; gap: 1.25rem;
+      transition: border-color .3s, transform .3s;
+      text-decoration: none;
+    }
+    .info-card:hover { border-color: var(--accent); transform: translateX(5px); }
+    .info-icon {
+      width: 46px; height: 46px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0;
+    }
+    .info-icon.green { background: rgba(110,231,183,.12); }
+    .info-icon.blue { background: rgba(56,189,248,.12); }
+    .info-icon.purple { background: rgba(167,139,250,.12); }
+    .info-icon.red { background: rgba(255,80,80,.12); }
+    .info-meta strong { display: block; font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; color: var(--heading); margin-bottom: .2rem; }
+    .info-meta span { font-size: .77rem; color: var(--muted); }
+
+    /* WHAT I DO */
+    #what-i-do { background: var(--surface); }
+    .roles-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem; margin-top: 3rem;
+    }
+    .role-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.75rem;
+      transition: border-color .3s, transform .3s;
+      position: relative; overflow: hidden;
+    }
+    .role-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0; transition: opacity .3s;
+    }
+    .role-card:hover { border-color: rgba(110,231,183,.3); transform: translateY(-5px); }
+    .role-card:hover::after { opacity: 1; }
+    .role-icon { font-size: 1.9rem; margin-bottom: 1.1rem; display: block; }
+    .role-card h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--heading); margin-bottom: .65rem; }
+    .role-card p { font-size: .81rem; color: var(--muted); line-height: 1.85; }
+
+    /* COMMUNITY */
+    #community { }
+    .community-inner {
+      display: grid; grid-template-columns: 1.2fr .9fr; gap: 5rem;
+      align-items: start; margin-top: 2.5rem;
+    }
+    .community-text h3 {
+      font-family: 'Instrument Serif', serif; font-size: 1.75rem;
+      color: var(--heading); margin-bottom: 1rem; font-style: italic;
+    }
+    .community-text p { font-size: .87rem; color: var(--muted); line-height: 1.9; margin-bottom: .9rem; }
+    .feature-list { list-style: none; margin: 1.5rem 0; }
+    .feature-list li {
+      display: flex; align-items: flex-start; gap: .75rem;
+      font-size: .83rem; color: var(--muted); margin-bottom: .85rem; line-height: 1.65;
+    }
+    .feature-list li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+
+    .community-cards { display: flex; flex-direction: column; gap: 1rem; }
+    .comm-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.4rem 1.6rem;
+      display: flex; align-items: center; gap: 1.1rem;
+      text-decoration: none; transition: all .3s;
+    }
+    .comm-card:hover { border-color: var(--accent); transform: translateX(4px); }
+    .comm-card-icon { width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .comm-card-icon.disc { background: rgba(88,101,242,.18); }
+    .comm-card-icon.yt { background: rgba(255,48,48,.14); }
+    .comm-card-icon.web { background: rgba(110,231,183,.12); }
+    .comm-card-meta strong { display: block; font-family: 'Syne', sans-serif; font-size: .9rem; color: var(--heading); font-weight: 700; margin-bottom: .18rem; }
+    .comm-card-meta span { font-size: .74rem; color: var(--muted); }
+    .comm-card-arrow { margin-left: auto; color: var(--muted); font-size: .9rem; transition: color .3s, transform .3s; }
+    .comm-card:hover .comm-card-arrow { color: var(--accent); transform: translateX(3px); }
+
+    /* MENTORSHIP */
+    #mentorship { background: var(--surface); }
+    .mentorship-inner {
+      display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem;
+      align-items: start; margin-top: 2.5rem;
+    }
+    .badges { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1.5rem 0; }
+    .badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; padding: .5rem 1rem;
+      font-size: .78rem; color: var(--text);
+    }
+    .badge .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .badge .dot.gold { background: #fbbf24; }
+    .badge .dot.purple { background: #a78bfa; }
+    .badge .dot.green { background: var(--accent); }
+
+    .sessions-stat {
+      display: inline-flex; align-items: baseline; gap: .5rem;
+      margin: 1rem 0;
+    }
+    .sessions-stat .big {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 4rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1;
+    }
+    .sessions-stat .label { font-size: .82rem; color: var(--muted); }
+
+    .rating-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+    .stars { color: #fbbf24; font-size: 1.1rem; letter-spacing: .1em; }
+    .rating-row span { font-size: .82rem; color: var(--muted); }
+
+    .testimonials { display: flex; flex-direction: column; gap: 1.1rem; }
+    .testimonial {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.5rem;
+      transition: border-color .3s;
+    }
+    .testimonial:hover { border-color: rgba(110,231,183,.3); }
+    .testimonial-quote { font-size: .82rem; color: var(--muted); line-height: 1.85; margin-bottom: 1rem; font-style: italic; }
+    .testimonial-quote::before { content: '"'; color: var(--accent); font-size: 1.1rem; }
+    .testimonial-quote::after { content: '"'; color: var(--accent); font-size: 1.1rem; }
+    .testimonial-author { display: flex; align-items: center; justify-content: space-between; }
+    .testimonial-author strong { font-size: .8rem; color: var(--text); font-weight: 500; }
+    .testimonial-author .date { font-size: .72rem; color: var(--muted); }
+
+    /* SKILLS */
+    #skills { }
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.25rem; margin-top: 3rem;
+    }
+    .skill-group {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.6rem;
+    }
+    .skill-group-title {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: .8rem;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.1rem;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: .45rem; }
+    .skill-tag {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 4px; padding: .3rem .7rem;
+      font-size: .73rem; color: var(--muted); transition: all .2s;
+    }
+    .skill-tag:hover { border-color: var(--accent2); color: var(--accent2); }
+
+    /* CONTACT */
+    #contact { background: var(--surface); text-align: center; }
+    #contact h2 { margin-bottom: .75rem; }
+    #contact > p { color: var(--muted); font-size: .88rem; margin-bottom: 3rem; }
+    .contact-grid {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: .9rem;
+    }
+    .contact-pill {
+      display: inline-flex; align-items: center; gap: .6rem;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 100px; padding: .75rem 1.5rem;
+      text-decoration: none; color: var(--muted);
+      font-size: .8rem; transition: all .25s;
+    }
+    .contact-pill:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(110,231,183,.1); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 3rem;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .73rem; color: var(--muted);
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .fu { animation: fadeUp .7s ease both; }
+    .d1 { animation-delay: .1s; } .d2 { animation-delay: .22s; } .d3 { animation-delay: .36s; } .d4 { animation-delay: .5s; } .d5 { animation-delay: .64s; }
+
+    /* RESPONSIVE */
+    @media (max-width: 960px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.5rem; }
+      #hero { padding: 7rem 1.5rem 4rem; }
+      #about, .community-inner, .mentorship-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .roles-grid { grid-template-columns: 1fr 1fr; }
+      footer { flex-direction: column; gap: .5rem; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .roles-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Akshay<span>.</span>dev</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#community">GrowIn</a></li>
+    <li><a href="#mentorship">Mentorship</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://topmate.io/akshay_kumar34" target="_blank" class="nav-badge">Book a Session →</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="hero-chip fu">Open for collaborations & mentorship</div>
+
+  <h1 class="fu d1">
+    Akshay<br/>
+    <span class="line2">Kumar.</span>
+  </h1>
+
+  <p class="hero-sub fu d2">DevOps Engineer · Open Source Evangelist · Community Builder</p>
+  <p class="hero-desc fu d3">
+    Founder of GrowIn Community — 1500+ developers learning, building, and growing together. I believe in learning and sharing in public, collaborating, and giving back.
+  </p>
+
+  <div class="hero-cta fu d4">
+    <a href="https://growin-community.vercel.app/" target="_blank" class="btn btn-primary">⚡ Visit GrowIn Community</a>
+    <a href="https://topmate.io/akshay_kumar34" target="_blank" class="btn btn-outline">📅 Book a Mentorship</a>
+  </div>
+
+  <div class="hero-numbers fu d5">
+    <div class="hero-num">
+      <div class="n">1500+</div>
+      <span class="l">Discord Members</span>
+    </div>
+    <div class="hero-num">
+      <div class="n">100+</div>
+      <span class="l">Delhi/NCR Meetup</span>
+    </div>
+    <div class="hero-num">
+      <div class="n">31</div>
+      <span class="l">Mentor Sessions</span>
+    </div>
+    <div class="hero-num">
+      <div class="n">5/5</div>
+      <span class="l">Topmate Rating</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-text">
+    <div class="section-tag">About Me</div>
+    <h2>Engineer.<br/>Evangelist.<br/>Community founder.</h2>
+    <p>
+      I'm <strong>Akshay Kumar</strong>, a DevOps Engineer currently working as an Open Source Evangelist (remote). I founded <strong>GrowIn Community</strong> — an inclusive space where developers believe in learning, building, and growing together.
+    </p>
+    <p>
+      What started as a small Discord server has grown into a <strong>1500+ member strong community</strong>, complete with monthly community calls, YouTube content, and in-person meetups. We took the community offline with a <strong>100+ person meetup in Delhi/NCR</strong> — proof that real connections happen beyond the screen.
+    </p>
+    <p>
+      I also mentor developers on Topmate, holding space for anyone navigating career pivots, open source journeys, or DevOps paths. Rated <strong>5/5</strong> by mentees and recognized as <strong>Top 1%</strong> on the platform.
+    </p>
+    <div class="about-tags">
+      <span class="tag">DevOps</span>
+      <span class="tag">Cloud Native</span>
+      <span class="tag">Open Source</span>
+      <span class="tag">Community Building</span>
+      <span class="tag">Mentorship</span>
+      <span class="tag">Delhi/NCR</span>
+    </div>
+  </div>
+
+  <div class="about-right">
+    <a href="https://growin-community.vercel.app/" target="_blank" class="info-card">
+      <div class="info-icon green">🌱</div>
+      <div class="info-meta">
+        <strong>GrowIn Community</strong>
+        <span>growin-community.vercel.app</span>
+      </div>
+    </a>
+    <a href="https://topmate.io/akshay_kumar34" target="_blank" class="info-card">
+      <div class="info-icon blue">🏅</div>
+      <div class="info-meta">
+        <strong>Top 1% on Topmate</strong>
+        <span>People's Choice · Community Care badges</span>
+      </div>
+    </a>
+    <a href="https://www.linkedin.com/in/akshay-kumar-12a550247" target="_blank" class="info-card">
+      <div class="info-icon purple">in</div>
+      <div class="info-meta">
+        <strong>LinkedIn</strong>
+        <span>akshay-kumar-12a550247</span>
+      </div>
+    </a>
+    <div class="info-card" style="cursor:default;">
+      <div class="info-icon red">📍</div>
+      <div class="info-meta">
+        <strong>Based in Delhi/NCR, India</strong>
+        <span>Organized 100+ person in-person meetup</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- WHAT I DO -->
+<section id="what-i-do">
+  <div class="section-tag">What I Do</div>
+  <h2>Roles & Focus Areas</h2>
+  <div class="roles-grid">
+    <div class="role-card">
+      <span class="role-icon">🌐</span>
+      <h3>Open Source Evangelism</h3>
+      <p>Advocating for open source adoption, contributing to projects, and helping developers understand the power of building in the open.</p>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">🛠️</span>
+      <h3>DevOps Engineering</h3>
+      <p>Working hands-on with cloud-native infrastructure, CI/CD, containerization, and modern DevOps practices at scale.</p>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">🏗️</span>
+      <h3>Community Building</h3>
+      <p>Founded GrowIn Community — 1500+ members, monthly Discord calls, in-person Delhi/NCR meetups, and a thriving YouTube presence.</p>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">🎬</span>
+      <h3>Content Creation</h3>
+      <p>Running "Akshay Kumar | GrowIn Community" on YouTube — tutorials, community highlights, and open source deep-dives.</p>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">🤝</span>
+      <h3>Mentorship</h3>
+      <p>31+ mentorship sessions on Topmate with a 5/5 rating. Guiding devs through career pivots, OSS contributions, and DevOps paths.</p>
+    </div>
+    <div class="role-card">
+      <span class="role-icon">🎙️</span>
+      <h3>Public Speaking</h3>
+      <p>Sharing insights at community events and meetups on open source culture, developer growth, and building inclusive communities.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- COMMUNITY -->
+<section id="community">
+  <div class="section-tag">GrowIn Community</div>
+  <div class="community-inner">
+    <div class="community-text">
+      <h3>"A community for developers, by developers."</h3>
+      <p>
+        GrowIn Community is an inclusive open source community where we believe in <strong>learning, building, and growing together</strong>. Started from a simple vision, it's grown into one of Delhi/NCR's most active developer communities.
+      </p>
+      <p>
+        We bring people together both online and offline — from monthly Discord calls to real-world meetups with 100+ attendees in Delhi/NCR.
+      </p>
+      <ul class="feature-list">
+        <li>Monthly community calls on Discord — 1500+ members and growing</li>
+        <li>In-person meetups in Delhi/NCR — 100+ developers showed up</li>
+        <li>YouTube channel with dev content, talks, and OSS journeys</li>
+        <li>Open source project showcases and contribution sessions</li>
+        <li>Mentorship and peer learning across all skill levels</li>
+      </ul>
+      <a href="https://growin-community.vercel.app/" target="_blank" class="btn btn-primary">🌱 Visit GrowIn Community</a>
+    </div>
+
+    <div class="community-cards">
+      <a href="https://growin-community.vercel.app/" target="_blank" class="comm-card">
+        <div class="comm-card-icon web">🌐</div>
+        <div class="comm-card-meta">
+          <strong>GrowIn Community Website</strong>
+          <span>growin-community.vercel.app</span>
+        </div>
+        <span class="comm-card-arrow">→</span>
+      </a>
+      <a href="https://discord.gg/" target="_blank" class="comm-card">
+        <div class="comm-card-icon disc">💬</div>
+        <div class="comm-card-meta">
+          <strong>Discord Server</strong>
+          <span>1500+ members · Monthly community calls</span>
+        </div>
+        <span class="comm-card-arrow">→</span>
+      </a>
+      <a href="https://youtube.com/@AkshayKumarGrowIn" target="_blank" class="comm-card">
+        <div class="comm-card-icon yt">▶</div>
+        <div class="comm-card-meta">
+          <strong>Akshay Kumar | GrowIn Community</strong>
+          <span>YouTube · Dev content & OSS talks</span>
+        </div>
+        <span class="comm-card-arrow">→</span>
+      </a>
+      <div class="comm-card" style="cursor:default;">
+        <div class="comm-card-icon" style="background:rgba(255,180,0,.12);">📍</div>
+        <div class="comm-card-meta">
+          <strong>Delhi/NCR In-Person Meetup</strong>
+          <span>100+ developers · Real connections</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- MENTORSHIP -->
+<section id="mentorship">
+  <div class="section-tag">Mentorship</div>
+  <div class="mentorship-inner">
+    <div>
+      <h2>Helping devs<br/>find their path.</h2>
+      <div class="sessions-stat">
+        <span class="big">31</span>
+        <span class="label">mentor sessions<br/>completed</span>
+      </div>
+      <div class="rating-row">
+        <span class="stars">★★★★★</span>
+        <span>5/5 rating · 16 testimonials</span>
+      </div>
+      <div class="badges">
+        <span class="badge"><span class="dot gold"></span>Top 1% on Topmate</span>
+        <span class="badge"><span class="dot purple"></span>People's Choice</span>
+        <span class="badge"><span class="dot green"></span>Community Care</span>
+      </div>
+      <p style="font-size:.85rem;color:var(--muted);line-height:1.85;margin:1rem 0 1.5rem;">
+        I offer 1:1 career mentorship sessions for developers navigating career breaks, pivots into DevOps, open source contributions, and more. Every session is personal, honest, and actionable.
+      </p>
+      <a href="https://topmate.io/akshay_kumar34" target="_blank" class="btn btn-primary">📅 Book on Topmate</a>
+    </div>
+
+    <div class="testimonials">
+      <div class="testimonial">
+        <p class="testimonial-quote">I had taken a career break and was not able to restart my career due to a lot of doubts and confusions. Akshay understood my problem and showed me a way again. I am going to start again and will keep talking to Akshay about what to do next.</p>
+        <div class="testimonial-author">
+          <strong>Vishawnath Sethi</strong>
+          <span class="date">Oct 27, 2025</span>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial-quote">I had a career guidance with him. He is a very friendly senior, his insights are very helpful. His guidance cleared all my doubts and provided a clear path for my journey in DevOps.</p>
+        <div class="testimonial-author">
+          <strong>Rahul</strong>
+          <span class="date">Oct 19, 2025</span>
+        </div>
+      </div>
+      <div class="testimonial" style="background:rgba(110,231,183,.04); border-color:rgba(110,231,183,.15);">
+        <p class="testimonial-quote" style="font-style:normal; color:var(--muted); font-size:.81rem;">Want to see more? All 16 testimonials are live on Topmate with genuine feedback from mentees.</p>
+        <a href="https://topmate.io/akshay_kumar34" target="_blank" class="btn btn-outline" style="padding:.55rem 1.2rem; font-size:.74rem; margin-top:.5rem;">View all reviews →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-tag">Skills & Expertise</div>
+  <h2>What I bring<br/>to the table.</h2>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <div class="skill-group-title">DevOps & Cloud</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">Kubernetes</span>
+        <span class="skill-tag">CI/CD</span>
+        <span class="skill-tag">Cloud Native</span>
+        <span class="skill-tag">Linux</span>
+        <span class="skill-tag">Infrastructure as Code</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Open Source</div>
+      <div class="skill-tags">
+        <span class="skill-tag">OSS Contribution</span>
+        <span class="skill-tag">Git / GitHub</span>
+        <span class="skill-tag">Project Governance</span>
+        <span class="skill-tag">Documentation</span>
+        <span class="skill-tag">Code Review</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Community</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Community Management</span>
+        <span class="skill-tag">Event Organization</span>
+        <span class="skill-tag">Discord</span>
+        <span class="skill-tag">Mentorship</span>
+        <span class="skill-tag">In-person Meetups</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Content & DevRel</div>
+      <div class="skill-tags">
+        <span class="skill-tag">YouTube</span>
+        <span class="skill-tag">Technical Writing</span>
+        <span class="skill-tag">Public Speaking</span>
+        <span class="skill-tag">Developer Relations</span>
+        <span class="skill-tag">Topmate</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-tag" style="justify-content:center;">Get in Touch</div>
+  <h2>Let's build<br/>something together.</h2>
+  <p>Open to collaborations, speaking invites, DevRel opportunities, or a good conversation about open source.</p>
+  <div class="contact-grid">
+    <a href="https://growin-community.vercel.app/" target="_blank" class="contact-pill">🌱 GrowIn Community</a>
+    <a href="https://topmate.io/akshay_kumar34" target="_blank" class="contact-pill">📅 Topmate</a>
+    <a href="https://www.linkedin.com/in/akshay-kumar-12a550247" target="_blank" class="contact-pill">in LinkedIn</a>
+    <a href="https://youtube.com/@AkshayKumarGrowIn" target="_blank" class="contact-pill">▶ YouTube</a>
+    <a href="https://discord.gg/" target="_blank" class="contact-pill">💬 Discord</a>
+    <a href="https://github.com/" target="_blank" class="contact-pill">🐙 GitHub</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 Akshay Kumar. Built with ☕ &amp; open source love.</span>
+  <span>
+    <a href="https://growin-community.vercel.app/" target="_blank">GrowIn Community</a>
+    &nbsp;·&nbsp;
+    <a href="https://topmate.io/akshay_kumar34" target="_blank">Topmate</a>
+  </span>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  });
+  (function animateRing() {
+    rx += (mx - rx) * .12; ry += (my - ry) * .12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  })();
+  document.querySelectorAll('a, button, .role-card, .info-card, .comm-card, .testimonial').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(2)';
+      ring.style.opacity = '1'; ring.style.transform = 'translate(-50%,-50%) scale(1.3)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.opacity = '.4'; ring.style.transform = 'translate(-50%,-50%) scale(1)';
+    });
+  });
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.role-card, .info-card, .comm-card, .testimonial, .skill-group, .stat-card').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(22px)';
+    el.style.transition = `opacity .6s ${i * 0.07}s ease, transform .6s ${i * 0.07}s ease`;
+    io.observe(el);
+  });
+
+  // Counter animation for hero numbers
+  function animateCount(el, end, suffix='') {
+    let start = 0, duration = 1800;
+    const step = timestamp => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const val = Math.floor(progress * end);
+      el.textContent = val + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const nums = document.querySelectorAll('.hero-num .n');
+  const observer2 = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      animateCount(nums[0], 1500, '+');
+      animateCount(nums[1], 100, '+');
+      animateCount(nums[2], 31, '');
+      observer2.disconnect();
+    }
+  }, { threshold: 0.5 });
+  if (nums[0]) observer2.observe(nums[0].closest('.hero-numbers'));
+</script>
+</body>
+</html>
